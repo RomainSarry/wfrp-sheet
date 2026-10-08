@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
   // Collections
   const simpleInputs = document.querySelectorAll(".simple");
   const additionInputs = document.querySelectorAll(".addition");
-  const contentEditable = document.querySelectorAll("[contenteditable]");
+  const contentEditable = document.querySelectorAll(".page [contenteditable]");
   const characSelects = document.querySelectorAll(".charac-select");
   const bonuses = document.querySelectorAll("output.bonus");
   const customData = document.querySelectorAll(".custom");
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
   const clearButton = document.getElementById("clear-button");
   const exportButton = document.getElementById("export-button");
   const importButton = document.getElementById("import-button");
-  const removeButtons = document.querySelectorAll(".remove");
+  const removeButtons = document.querySelectorAll(".page .remove");
 
   // Event Listeners
   simpleInputs.forEach((input) => {
@@ -100,6 +100,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
   // Fill inputs from locaStorage data
   async function fillFromStorage() {
+    document.dispatchEvent(new Event("pets:reload"));
     if (navigator.storage) {
       // Generate custom data rows if data available
       const custom = document.querySelectorAll(".custom");
@@ -302,6 +303,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     const msgs = document.querySelectorAll(".encumbrance-state-penalty");
 
     total.value = armour + trappings + weapons;
+    document.dispatchEvent(new Event("pets:encumbrance"));
 
     let messageType = 0;
     if (Number(total.value) <= max) {
@@ -398,7 +400,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
   function updateOutputs(outputs) {
     if (outputs === undefined) {
       outputs = document.querySelectorAll(
-        "output:not(.bonus, .hidden, .encumbrance-total)"
+        ".page output:not(.bonus, .hidden, .encumbrance-total)"
       );
     }
     outputs.forEach((output) => {
@@ -549,7 +551,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
   async function importData() {
     const fileInput = document.getElementById("import-db");
-    const msgs = document.querySelectorAll(".error, .success");
+    const msgs = document.querySelectorAll("#modal .error, #modal .success");
     const errorMessage = document.getElementById("import-db-error");
     const errorMessageEmpty = document.getElementById("import-db-error-empty");
     const errorMessageFile = document.getElementById("import-db-error-file");

@@ -1,0 +1,47 @@
+<fieldset class="trappings {% if prefix == 'trappings' %}simple custom encumbrance-src{% else %}pet-trappings{% endif %}" id="{{ prefix }}" {% if prefix != 'trappings' %}data-pet-type="inventory"{% endif %}>
+  <legend id="{{ prefix }}-title">{{ 'trappings.title' | i18n }}</legend>
+  <table aria-labelledby="{{ prefix }}-title">
+    <thead>
+      <tr>
+        <th scope="col" id="{{ prefix }}-name-label">{{ 'trappings.name' | i18n }}</th>
+        <th scope="col" class="narrow" id="{{ prefix }}-encumbrance-label">
+          <abbr title="{{ 'trappings.encumbrance' | i18n }}">{{ 'trappings.encumbranceAbbr' | i18n }}</abbr>
+        </th>
+        <th scope="col" class="narrow" id="{{ prefix }}-worn-label">{{ 'trappings.worn' | i18n }}</th>
+        <th scope="col" class="narrow actions">
+          <span class="sr-only" id="{{ prefix }}-actions-title">{{ 'actions.title' | i18n }}</span>
+          <svg class="svg-actions" role="img" aria-labelledby="{{ prefix }}-actions-title">
+            <use href="#actions" />
+          </svg>
+        </th>
+      </tr>
+    </thead>
+    <tbody id="{% if prefix == 'trappings' %}trappings-body{% else %}pet-inventory{% endif %}"></tbody>
+  </table>
+  {% if prefix == 'trappings' %}
+  <output class="hidden" id="encumbrance-trappings-total"></output>
+  {% endif %}
+  <template id="{{ prefix }}-row">
+    <tr>
+      <td class="text-align-start">
+        <div contenteditable role="textbox" aria-multiline="true" aria-labelledby="{{ prefix }}-name-label" data-column="name"></div>
+        {% if prefix == 'trappings' %}
+        <input type="hidden" name="{{ prefix }}-name-" id="{{ prefix }}-name-">
+        {% endif %}
+      </td>
+      <td>
+        <input type="number" aria-labelledby="{{ prefix }}-encumbrance-label" data-column="enc" {% if prefix == 'trappings' %}name="{{ prefix }}-encumbrance-" id="{{ prefix }}-encumbrance-"{% else %}min="0" step="any"{% endif %}>
+      </td>
+      <td>
+        <input type="checkbox" aria-labelledby="{{ prefix }}-worn-label" data-column="worn" {% if prefix == 'trappings' %}name="{{ prefix }}-worn-" id="{{ prefix }}-worn-"{% endif %}>
+      </td>
+      <td class="actions">
+        <button class="remove" type="button" aria-label="{{ 'actions.delete' | i18n }}">
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <use href="#trash" />
+          </svg>
+        </button>
+      </td>
+    </tr>
+  </template>
+</fieldset>
