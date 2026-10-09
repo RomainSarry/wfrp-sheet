@@ -1,0 +1,178 @@
+<details id="pets" class="pets">
+  <summary class="button-modal pets-toggle" aria-label="{{ 'pets.title' | i18n }}" title="{{ 'pets.title' | i18n }}">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+      <ellipse cx="5" cy="8" rx="2.5" ry="3.5"/>
+      <ellipse cx="10" cy="5" rx="2.5" ry="3.5"/>
+      <ellipse cx="16" cy="5" rx="2.5" ry="3.5"/>
+      <ellipse cx="21" cy="9" rx="2.5" ry="3.5"/>
+      <path d="M5 18c0-3 4-8 7-8s7 5 7 8c0 5-5 2-7 2s-7 3-7-2Z"/>
+    </svg>
+  </summary>
+  <div class="pets-backdrop" aria-hidden="true"></div>
+  <section class="pets-panel" aria-label="{{ 'pets.title' | i18n }}">
+    <div class="pets-content">
+      <div class="pets-toolbar">
+        <button type="button" id="pet-previous" class="pet-icon" aria-label="{{ 'pets.previous' | i18n }}" title="{{ 'pets.previous' | i18n }}">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m15 5-7 7 7 7"/>
+          </svg>
+        </button>
+        <button type="button" id="pet-next" class="pet-icon" aria-label="{{ 'pets.next' | i18n }}" title="{{ 'pets.next' | i18n }}">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m9 5 7 7-7 7"/>
+          </svg>
+        </button>
+        <button type="button" id="pet-add" class="pet-icon" aria-label="{{ 'pets.add' | i18n }}" title="{{ 'pets.add' | i18n }}">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+        </button>
+        <button type="button" id="pet-delete" class="pet-icon" aria-label="{{ 'pets.remove' | i18n }}" title="{{ 'pets.remove' | i18n }}">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <use href="#trash"/>
+          </svg>
+        </button>
+        <span id="pet-position" class="sr-only" aria-live="polite"></span>
+      </div>
+      <p id="pet-empty" class="pet-empty">{{ 'pets.empty' | i18n }}</p>
+      <div id="pet-sheet" class="pet-sheet" hidden>
+        <div class="pet-info">
+          <div class="field">
+            <label for="pet-name">{{ 'info.name' | i18n }}</label>
+            <input id="pet-name" type="text" data-field="name">
+          </div>
+          <div class="field">
+            <label for="pet-species">{{ 'info.species' | i18n }}</label>
+            <input id="pet-species" type="text" data-field="species">
+          </div>
+          <div class="field">
+            <label for="pet-mounted">{{ 'pets.mounted' | i18n }}</label>
+            <input id="pet-mounted" type="checkbox" data-field="mounted">
+          </div>
+        </div>
+        <fieldset class="movement pet-movement">
+          <legend>{{ 'movement.title' | i18n }}</legend>
+          <div class="movement-wrapper">
+            <div>
+              <label for="pet-movement">{{ 'movement.title' | i18n }}</label>
+              <input type="number" min="0" id="pet-movement" data-field="movement">
+            </div>
+            <div>
+              <label for="pet-walk">{{ 'movement.walk' | i18n }}</label>
+              <output id="pet-walk"></output>
+            </div>
+            <div>
+              <label for="pet-run">{{ 'movement.run' | i18n }}</label>
+              <output id="pet-run"></output>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset class="wounds pet-wounds">
+          <legend>{{ 'wounds.title' | i18n }}</legend>
+          <div class="wounds-wrapper">
+            <div class="pet-wound-value">
+              <label for="pet-wounds">{{ 'pets.woundsCurrent' | i18n }}</label>
+              <input type="number" min="0" id="pet-wounds" data-field="wounds">
+            </div>
+            <div class="pet-wound-value">
+              <label for="pet-wounds-max">{{ 'pets.woundsMax' | i18n }}</label>
+              <input type="number" min="0" id="pet-wounds-max" data-field="woundsMax">
+            </div>
+          </div>
+        </fieldset>
+        <fieldset class="charac pet-charac">
+          <legend id="pet-charac-title">{{ 'charac.title' | i18n }}</legend>
+          {% assign characteristics = 'ws,bs,s,t,i,ag,dex,int,wp,fel' | split: ',' %}
+          <table class="left-aligned" aria-labelledby="pet-charac-title">
+            <thead>
+              <tr>
+                <th></th>{% for characteristic in characteristics %}<th scope="col" id="pet-{{ characteristic }}-label">
+                  <abbr title="{{ characteristic | characFull | i18n }}">{{ characteristic | characAbbr | i18n }}</abbr>
+                </th>{% endfor %}</tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row" id="pet-current-label">{{ 'charac.current' | i18n }}</th>{% for characteristic in characteristics %}<td>
+                  <input type="number" min="0" data-field="{{ characteristic }}" aria-labelledby="pet-{{ characteristic }}-label pet-current-label">
+                </td>{% endfor %}</tr>
+            </tbody>
+          </table>
+        </fieldset>
+        <fieldset class="talents pet-traits" data-pet-type="traits">
+          <legend id="pet-traits-title">{{ 'pets.traits' | i18n }}</legend>
+          <table aria-labelledby="pet-traits-title">
+            <thead>
+              <tr>
+                <th scope="col" id="pet-trait-name-label">{{ 'talents.name' | i18n }}</th>
+                <th scope="col" id="pet-trait-description-label">{{ 'talents.desc' | i18n }}</th>
+                <th scope="col" class="narrow actions">
+                  <svg class="svg-actions" aria-hidden="true">
+                    <use href="#actions"/>
+                  </svg>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="pet-traits"></tbody>
+          </table>
+          <template id="pet-traits-row">
+            <tr>
+              <td class="text-align-start">
+                <div contenteditable role="textbox" aria-multiline="true" aria-labelledby="pet-trait-name-label" data-column="name"></div>
+              </td>
+              <td class="text-align-start">
+                <div contenteditable role="textbox" aria-multiline="true" aria-labelledby="pet-trait-description-label" data-column="description"></div>
+              </td>
+              <td class="actions">
+                <button type="button" class="remove" aria-label="{{ 'actions.delete' | i18n }}">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#trash" /></svg>
+                </button>
+              </td>
+            </tr>
+          </template>
+        </fieldset>
+        {% include "partials/trappings.liquid" prefix:"pet-trappings" %}
+        <fieldset class="encumbrance pet-encumbrance">
+          <legend id="pet-encumbrance-title">{{ 'encumbrance.title' | i18n }}</legend>
+          <table class="left-aligned" aria-labelledby="pet-encumbrance-title">
+            <tbody>
+              <tr>
+                <th scope="row">{{ 'encumbrance.trappings' | i18n }}</th>
+                <td>
+                  <output id="pet-trappings-total"></output>
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">{{ 'pets.mounted' | i18n }}</th>
+                <td>
+                  <output id="pet-mounted-total"></output>
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <label for="pet-max">
+                    <abbr title="{{ 'encumbrance.max' | i18n }}">{{ 'encumbrance.maxAbbr' | i18n }}</abbr>
+                  </label>
+                </th>
+                <td>
+                  <input type="number" min="0" step="any" id="pet-max" data-field="max">
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">{{ 'encumbrance.total' | i18n }}</th>
+                <td>
+                  <output id="pet-total"></output>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </fieldset>
+      </div>
+    </div>
+    <button type="button" id="pet-close" class="pet-close pet-icon" aria-label="{{ 'pets.close' | i18n }}" title="{{ 'pets.close' | i18n }}">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m5 15 7-7 7 7"/>
+      </svg>
+    </button>
+    <span hidden id="pet-labels" data-confirm="{{ 'pets.confirm' | i18n }}"></span>
+  </section>
+</details>

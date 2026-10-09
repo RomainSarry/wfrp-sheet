@@ -1314,3 +1314,245 @@ table.layout-fixed {
     inset: 5%;
   }
 }
+
+/* Pets and mounts share the character sheet's tables and fields. */
+.pets {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 3;
+}
+.pets-toggle {
+  top: 0;
+  right: 2.25rem;
+  padding: .25rem;
+  background-color: var(--bgcolor);
+  border-left: 1px solid var(--contrast);
+  border-bottom: 1px solid var(--contrast);
+  border-bottom-left-radius: .5rem;
+  cursor: pointer;
+  list-style: none;
+}
+.pets-toggle::-webkit-details-marker {
+  display: none;
+}
+.pets-backdrop {
+  position: fixed;
+  inset: 0;
+  background: #0006;
+}
+.pets-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--bgcolor);
+  color: var(--contrast);
+  border-bottom: 1px solid var(--contrast);
+  box-shadow: 0 .5rem 1rem #0005;
+}
+.pets-content {
+  height: 50dvh;
+  display: flex;
+  flex-direction: column;
+}
+.has-sheets .pets-content {
+  height: 80dvh;
+}
+.pets-toolbar {
+  display: flex;
+  flex: 0 0 auto;
+  gap: .25rem;
+  padding: .5rem;
+}
+.pet-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: .25rem;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.pet-icon svg {
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.pet-icon:disabled {
+  color: var(--disabled);
+  cursor: default;
+}
+.pet-sheet {
+  display: grid;
+  flex: 1;
+  min-height: 0;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-rows: 1fr 1.6fr 1.4fr;
+  grid-template-areas: "info info movement movement wounds wounds" "charac charac charac traits traits traits" "trappings trappings trappings trappings encumbrance encumbrance";
+  gap: .125rem;
+  background: var(--contrast);
+  border-top: .125rem solid var(--contrast);
+  overflow: auto;
+}
+.pet-sheet > * {
+  background: var(--bgcolor);
+  min-height: 0;
+}
+.pet-info {
+  grid-area: info;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: .5rem;
+  padding: .5rem;
+}
+.pet-info .field input[type="text"] {
+  flex: 1;
+  min-width: 0;
+  border-bottom: 1px solid var(--contrast);
+}
+.pet-wounds {
+  grid-area: wounds;
+}
+.pet-wound-value {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  border-top: 1px solid var(--contrast);
+}
+.pet-wound-value + .pet-wound-value {
+  border-left: 1px solid var(--contrast);
+}
+.pet-wound-value label {
+  display: block;
+  padding: .25rem;
+  font-size: .8em;
+}
+.pet-wound-value input {
+  box-sizing: border-box;
+  font-size: 3em;
+  font-weight: bold;
+  text-align: center;
+}
+.pet-charac {
+  grid-area: charac;
+}
+.pet-movement {
+  grid-area: movement;
+}
+.pet-traits {
+  grid-area: traits;
+}
+.pet-trappings {
+  grid-area: trappings;
+}
+.pet-encumbrance {
+  grid-area: encumbrance;
+}
+.pet-empty {
+  flex: 1;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  margin: 0;
+  padding: 2rem;
+}
+.pet-close {
+  display: flex;
+  width: min(20rem, 80%);
+  height: 3rem;
+  margin: 0 auto;
+  border-radius: 0;
+}
+.pets-panel [hidden] {
+  display: none;
+}
+.app.pets-open {
+  overflow: hidden;
+}
+.app.pets-open #open-modal {
+  position: fixed;
+  z-index: 4;
+}
+.pets[open] .pets-panel {
+  animation: pets-slide-in .25s ease-out;
+}
+.pets[open] .pets-backdrop {
+  animation: pets-fade-in .25s ease-out;
+}
+.pets.closing .pets-panel {
+  animation: pets-slide-out .25s ease-in forwards;
+  pointer-events: none;
+}
+.pets.closing .pets-backdrop {
+  animation: pets-fade-out .25s ease-in forwards;
+}
+@keyframes pets-slide-in {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes pets-slide-out {
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+@keyframes pets-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes pets-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@media (max-width: 48em) {
+  .pet-sheet {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    grid-template-areas: "info" "movement" "wounds" "charac" "traits" "trappings" "encumbrance";
+    grid-auto-rows: max-content;
+  }
+  .pet-sheet > fieldset {
+    overflow: visible;
+  }
+  .pet-sheet .pet-charac {
+    overflow: auto;
+  }
+  .pet-charac table {
+    min-width: 36rem;
+  }
+  .pet-sheet .pet-traits {
+    min-height: 12rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pets[open] .pets-panel, .pets[open] .pets-backdrop {
+    animation: none;
+  }
+}
+@media print {
+  .pets {
+    display: none;
+  }
+}
+.pet-traits [contenteditable],
+.pet-trappings [contenteditable] {
+  white-space: pre-wrap;
+}
